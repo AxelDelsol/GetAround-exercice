@@ -3,5 +3,7 @@
 source 'https://rubygems.org'
 
 group :test, :development do
+  gem 'rspec', '~> 3'
   gem 'rubocop', '~> 1'
+  gem 'rubocop-rspec', require: false
 end
