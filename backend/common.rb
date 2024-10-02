@@ -13,8 +13,6 @@ module Common
     def rental_duration = (end_date - start_date).to_i + 1
   end
 
-  RentalPrice = Data.define(:id, :price)
-
   def self.parse_rentals(content)
     data = JSON.parse(content, symbolize_names: true)
     cars = data[:cars].map { |car| [car[:id], Car.new(**car)] }.to_h
@@ -27,17 +25,17 @@ module Common
     end
   end
 
-  def self.dump_prices(filename, prices)
+  def self.dump_prices(filename, prices, serializer:)
     File.open(filename, 'w') do |f|
-      # While using map(&:to_h) is simpler, it creates a sneaky coupling
-      # between the model and its serialization.
-      formatted_prices = prices.sort_by(&:id).map do |rental_price|
-        { id: rental_price.id, price: rental_price.price }
-      end
-
+      formatted_prices = prices.sort_by(&:id).map { serializer.call(_1) }
       f.puts JSON.pretty_generate({ rentals: formatted_prices })
     end
   end
 end
 
+require_relative 'common/rental_price'
+require_relative 'common/commission'
 require_relative 'common/pricer'
+require_relative 'common/pricing_service'
+
+require_relative 'common/serializers'

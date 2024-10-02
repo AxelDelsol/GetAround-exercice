@@ -21,14 +21,9 @@ module Common
     #
     # @param [Common::Rental] rental
     #
-    # @return [Common::RentalPrice] Rental price.
+    # @return [int] Rental price.
     #
-    def call(rental)
-      Common::RentalPrice.new(
-        id: rental.id,
-        price: (distance_price(rental) + duration_price(rental)).to_i
-      )
-    end
+    def call(rental) = (distance_price(rental) + duration_price(rental)).to_i
 
     private
 

@@ -7,7 +7,7 @@ set -eu
 # - write ruby main.rb
 # - compare {{level}}/data/output.json and expected_output.json
 
-for i in {1..2}
+for i in {1..3}
 do
     echo -n "Checking level ${i}: "
     cd level${i}

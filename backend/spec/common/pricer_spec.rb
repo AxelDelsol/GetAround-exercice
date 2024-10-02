@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative '../../common'
-
 RSpec.describe Common::Pricer do
   subject(:pricer) { described_class.new(duration_discount) }
 
@@ -20,54 +18,54 @@ RSpec.describe Common::Pricer do
 
     context 'when the rental duration is smaller than the first discount day' do
       let(:rental) do
-        Common::Rental.new(id: car.id,
+        Common::Rental.new(id: 1,
                            car:, start_date: Date.parse('2015-12-8'),
                            end_date: Date.parse('2015-12-8'),
                            distance: 100)
       end
 
       it 'does not apply the discount' do
-        expect(call).to eq Common::RentalPrice.new(id: rental.id, price: 3000)
+        expect(call).to eq 3000
       end
     end
 
     context 'when the rental duration is inside the discount range' do
       let(:rental) do
-        Common::Rental.new(id: car.id,
+        Common::Rental.new(id: 1,
                            car:, start_date: Date.parse('2015-03-31'),
                            end_date: Date.parse('2015-04-01'),
                            distance: 300)
       end
 
       it 'partially applies the discount' do
-        expect(call).to eq Common::RentalPrice.new(id: rental.id, price: 6800)
+        expect(call).to eq 6800
       end
     end
 
     context 'when the rental duration covers the whole discount range' do
       let(:rental) do
-        Common::Rental.new(id: car.id,
+        Common::Rental.new(id: 1,
                            car:, start_date: Date.parse('2015-07-3'),
                            end_date: Date.parse('2015-07-14'),
                            distance: 1000)
       end
 
       it 'fully applies the discount' do
-        expect(call).to eq Common::RentalPrice.new(id: rental.id, price: 27_800)
+        expect(call).to eq 27_800
       end
     end
 
     context 'when there is no discount' do
       let(:duration_discount) { [] }
       let(:rental) do
-        Common::Rental.new(id: car.id,
+        Common::Rental.new(id: 1,
                            car:, start_date: Date.parse('2015-12-8'),
                            end_date: Date.parse('2015-12-8'),
                            distance: 100)
       end
 
       it 'is linear in the distance and duration' do
-        expect(call).to eq Common::RentalPrice.new(id: rental.id, price: 3000)
+        expect(call).to eq 3000
       end
     end
   end
