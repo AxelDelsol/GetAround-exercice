@@ -17,6 +17,10 @@ module Common
       @commission = commission
     end
 
+    def owner_gain
+      @owner_gain ||= price - insurance_fee - assistance_fee - drivy_fee
+    end
+
     def_delegators :@rental, :id
     def_delegators :@commission, :insurance_fee, :assistance_fee, :drivy_fee
   end

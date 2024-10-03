@@ -36,6 +36,7 @@ end
 require_relative 'common/rental_price'
 require_relative 'common/commission'
 require_relative 'common/pricer'
+require_relative 'common/commission_handler'
 require_relative 'common/pricing_service'
 
 require_relative 'common/serializers'

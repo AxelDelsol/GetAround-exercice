@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
-require_relative '../../level3/commission_handler'
-
-RSpec.describe CommissionHandler do
+RSpec.describe Common::CommissionHandler do
   subject(:handler) do
     described_class.new(commission_percent: 30,
                         insurance_percent: 50,

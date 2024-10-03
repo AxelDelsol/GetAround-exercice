@@ -4,7 +4,6 @@ require 'date'
 require 'json'
 
 require_relative '../common'
-require_relative 'commission_handler'
 
 INPUT_FILENAME = File.join(__dir__, 'data', 'input.json')
 OUTPUT_FILENAME = File.join(__dir__, 'data', 'output.json')
@@ -24,7 +23,7 @@ COMMISSION_CONFIG = {
 rentals = Common.parse_rentals(File.read(INPUT_FILENAME))
 
 pricer = Common::Pricer.new(DISCOUNT)
-commission_handler = CommissionHandler.new(**COMMISSION_CONFIG)
+commission_handler = Common::CommissionHandler.new(**COMMISSION_CONFIG)
 service = Common::PricingService.new(pricer:, commission_handler:)
 
 prices = rentals.map { service.call(_1) }

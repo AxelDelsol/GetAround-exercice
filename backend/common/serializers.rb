@@ -10,3 +10,4 @@ end
 
 require_relative 'serializers/basic'
 require_relative 'serializers/basic_commission'
+require_relative 'serializers/action'
