@@ -1,26 +1,23 @@
 # frozen_string_literal: true
 
-RSpec.describe Common::Serializers::Action do
-  subject(:serializer) { described_class.new }
+RSpec.describe Common::Extractors::ActionsExtractor do
+  subject(:actions_extractor) { described_class.new }
 
   describe '#call' do
-    subject(:call) { serializer.call(rental_price) }
+    subject(:call) { actions_extractor.call(rental_price, {}) }
 
     let(:rental_price) do
-      Common::RentalPrice.new(
-        rental: instance_double(Common::Rental, id: 1),
-        price: 3000,
-        commission: Common::Commission.new(
-          insurance_fee: 450,
-          assistance_fee: 100,
-          drivy_fee: 350
-        )
-      )
+      build(:rental_price,
+            car_price: 3000,
+            commission: Common::Commission.new(
+              insurance_fee: 450,
+              assistance_fee: 100,
+              drivy_fee: 350
+            ))
     end
 
     let(:expected_hash) do
       {
-        id: 1,
         actions: [
           {
             who: 'driver',

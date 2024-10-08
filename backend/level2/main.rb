@@ -8,21 +8,25 @@ require_relative '../common'
 INPUT_FILENAME = File.join(__dir__, 'data', 'input.json')
 OUTPUT_FILENAME = File.join(__dir__, 'data', 'output.json')
 
+DurationDiscount = Common::Pricers::CarPricer::DurationDiscount
 DISCOUNT = [
-  Common::Pricer::DurationDiscount.new(start_after: 1, discount_percent: 10),
-  Common::Pricer::DurationDiscount.new(start_after: 4, discount_percent: 30),
-  Common::Pricer::DurationDiscount.new(start_after: 10, discount_percent: 50)
+  DurationDiscount.new(start_after: 1, discount_percent: 10),
+  DurationDiscount.new(start_after: 4, discount_percent: 30),
+  DurationDiscount.new(start_after: 10, discount_percent: 50)
 ].freeze
 
 rentals = Common.parse_rentals(File.read(INPUT_FILENAME))
 
-pricer = Common::Pricer.new(DISCOUNT)
-commission_handler = proc do |_rental, _price|
-  Common::Commission.new(insurance_fee: 0, assistance_fee: 0, drivy_fee: 0)
-end
-service = Common::PricingService.new(pricer:, commission_handler:)
+car_pricer = Common::Pricers::CarPricer.new(DISCOUNT)
+service = Common::PricingService.new(car_pricer:)
 
 prices = rentals.map { service.call(_1) }
 
-Common.dump_prices(OUTPUT_FILENAME, prices,
-                   serializer: Common::Serializers::Basic.new)
+Extractors = Common::Extractors
+extractor = Extractors::CompositionExtractor.new(
+  [Extractors::IdExtractor.new, Extractors::PriceExtractor.new]
+)
+
+rentals_output = prices.sort_by(&:id).map { extractor.call(_1, {}) }
+
+Common.write_json(OUTPUT_FILENAME, rentals_output)

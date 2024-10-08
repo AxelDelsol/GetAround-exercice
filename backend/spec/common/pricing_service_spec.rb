@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 RSpec.describe Common::PricingService do
-  subject(:service) { described_class.new(pricer:, commission_handler:) }
+  subject(:service) { described_class.new(car_pricer:, commission_handler:) }
 
-  let(:pricer) { proc { |_rental| 100 } }
+  let(:car_pricer) { proc { |_rental| 100 } }
   let(:commission_handler) { proc { |_rental, _price| commission } }
   let(:commission) do
-    Common::Commission.new(insurance_fee: 1, assistance_fee: 2, drivy_fee: 3)
+    build(:commission, insurance_fee: 1, assistance_fee: 2, drivy_fee: 3)
   end
 
   describe '#call' do
@@ -23,7 +23,7 @@ RSpec.describe Common::PricingService do
     end
 
     it 'uses the pricer to compute the rental price' do
-      expect(call.price).to eq 100
+      expect(call.car_price).to eq 100
     end
 
     it 'uses the commission handler to compute the commission' do
